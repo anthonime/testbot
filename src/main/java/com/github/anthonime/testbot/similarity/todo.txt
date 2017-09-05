@@ -1,0 +1,78 @@
+semantic similarity:
+https://en.wikipedia.org/wiki/Semantic_similarity
+
+http://www.semantic-measures-library.org/sml/index.php?q=lib#how_to_use
+http://www.semantic-measures-library.org/sml/index.php?q=show_source&src=./docs/sources/slib/examples/sml/general/SMComputation.java
+
+
+given a partial test bean,
+we want to check the similarity accross a set of reference beans
+in order to select the best reference match
+
+score = avg(propscroes) = sum(propscore)/propscore_count
+
+sum_propscore = 0
+num_propscore = 0
+for each prop in ref
+    num_propscore++
+    if(test.prop does not exist) => next
+    if(test.prop is not set) => if(ref.prop is not set) => propscore += 1, otherwise next
+    if(test.prop is set) => sum_propscrore += score(test.prop, ref.prop)
+
+score = sum_propscore / num_propscore
+
+score(test.prop, ref.prop){
+    if(test.prop is not set && ref.prop is not set) => return 1
+    if(test.prop is not set && ref.prop is set) => return 0
+    if(test.prop is set && ref.prop is not set) => return 0 ?? or it does not count?
+
+    if(not same type) => fault ? ignore ? coercion ?
+    if(fault)=> fault!
+    if(ignore)=> return 0; => dont match at all (+ warning?)
+    if(coercion) => do the coercion of one or the other (the richer wins) => type
+
+    scoreData(type, test.prop, ref.prop)
+
+}
+
+scoreData(type, test.prop, ref.prop){
+    switch(type){
+        string: => dist_string
+        boolean: not equals=>0 or equals=>1
+        number: abs(a-b) between 0 and 1? => abs(a-b) else => dist(string(a),string(b))
+        list?
+        nestedObject
+}
+
+a   b    abs(a-b)  compute   result
+5   15     10
+100 100     0       1-0        1
+-15  5     20
+
+coercion
+========
+
+richness of types:
+=================
+boolean => number(0 or 1)
+number => string
+string => list[string](size=1)
+list
+obj
+map
+
+datatypes
+=========
+unset
+boolean
+number
+string
+(nested object) with #ref?
+map => equals nested object (with #ref?)
+list (size)
+     boolean
+     number
+     string
+     (nested object) with #ref?
+     map => equals nested object (with #ref?)
+

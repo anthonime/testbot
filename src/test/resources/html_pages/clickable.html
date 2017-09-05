@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<button testid="buttonbytext">identifier</button>
+<button testid="buttonbytextignorecase">iDenTIfier</button>
+<button testid="buttonbytextcontaining">has identifier here</button>
+<button testid="buttonbytextstarting">identifier here</button>
+<button testid="buttonbytextending">has identifier</button>
+<button testid="fixme" shouldnotbeignored><br/>has<span>fzafzae</span>identifier</button>
+<button testid="buttonbytextwithchildrenafter">identifier<br/>has<span>fzafzae</span>identifier</button>
+<button testid="buttonbytextinsidechild"><br/>has<span>has identifier</span></button>
+<button testid="buttonbyattributename" identifier="anything">blah</button>
+<button testid="buttonbyattributenamecontains" data-identifier="anything">blah</button>
+<button testid="buttonbyanyattributecontains" data-any="identifier_2">blah</button>
+
+<button testid="buttonbyid" id="identifier">blah</button>
+<button testid="buttonbyidcontaining" id="my_identifier">blah</button>
+<button testid="buttonbyname" name="identifier">blah</button>
+<button testid="buttonbynamecontaining" name="my_identifier">blah</button>
+
+<button testid="buttonbytype" type="reset">blah</button>
+
+<button testid="ignored">blah</button>
+
+<input testid="inputbuttonbyvalue" type="button" value="identifier_2"/>
+<input testid="inputbuttonbyid" type="button" id="identifier_2"/>
+<input testid="inputbuttonbyname" type="button" name="identifier_2"/>
+<input testid="inputbuttonbyattributename" type="button" value="ignored" data-identifier="anything">
+<input testid="inputresetbyvalue" type="reset" value="identifier_2">
+<input testid="inputresetbyid" type="reset" value="identifier_2">
+<input testid="inputresetbyname" type="reset" value="identifier_2">
+<input testid="inputresetbyattributename" type="reset" value="ignored" data-identifier="anything">
+<input testid="inputsubmitbyvalue" type="submit" value="identifier_2">
+<input testid="inputsubmitbyid" type="submit" value="identifier_2">
+<input testid="inputsubmitbyname" type="submit" value="identifier_2">
+<input testid="inputsubmitbyattributename" type="submit" value="ignored" data-identifier="anything">
+
+<input testid="ignored" type="text" value="identifier_2"/>
+
+
+<a testid="linkbytext">identifier</a>
+<a testid="linkbytextignorecase">iDenTIfier</a>
+<a testid="linkbytextcontaining">has identifier here</a>
+<a testid="linkbytextstarting">identifier here</a>
+<a testid="linkbytextending">has identifier</a>
+<a testid="linkbytextwithchildren" ignored><br/>has<span>fzafzae</span>identifier</a>
+<a testid="linkbytextwithchildrenafter">identifier<br/>has<span>fzafzae</span>identifier</a>
+<a testid="linkbytextinsidechild"><br/>has<span>has identifier</span></a>
+<a testid="linkbyattributename" identifier="anything">blah</a>
+<a testid="linkbyattributenamecontains" data-identifier="anything">blah</a>
+<a testid="linkbyanyattributecontains" data-any="identifier_2">blah</a>
+
+
+<div testid="rolebutton" role="button">identifier</div>
+<div testid="rolelink" role="link">identifier</div>
+<div testid="rolemenuitem" role="menuitem">identifier</div>
+<div testid="roletab" role="tab">identifier</div>
+<button testid="role+button" role="button">identifier</button>
+
+<button testid="problembutton" type="button" jsname="Cuz2Ue" class="uBOgn">Adresse e-mail oubliée&nbsp;?</button>
+
+<div testid="ignored" role="button"></div>
+<div testid="ignored" role="alert">identifier</div>
+
+<div id="testcontainer">
+    <section>
+        <button testid="innerbutton">identifier</button>
+        <input testid="innerinput" type="button" value="identifier_2"/>
+        <a testid="innerlink">identifier</a>
+        <div testid="innerrole" role="button">identifier</div>
+        <div testid="ignored" role="button"></div>
+    </section>
+</div>
+
+<div testid="textexact">my text</div>
+<div testid="textcontains">have my text here</div>
+<div testid="textwithchild">have my text <span>here</span></div>
+<div testid="fixme" shouldnotbeignored>have <span>here</span> my text</div>
+<div testid="ignored">have
+    <div testid="textwithchildcontains">my text</div>
+    <span>here</span></div>
+<div testid="ignored">
+    <div testid="textinchild">my text</div>
+</div>
+<div testid="ignored">
+    <div testid="ignored">
+        <p testid="ignored">
+            <span testid="ignored">
+                <a testid="textindescendant">my text</a>
+            </span>
+        </p>
+    </div>
+</div>
+<div testid="ignored">
+    <div testid="ignored">
+        <p testid="ignored">
+            <span testid="ignored">
+                <a testid="textindescendantcontaining">almost my text here</a>
+            </span>
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
