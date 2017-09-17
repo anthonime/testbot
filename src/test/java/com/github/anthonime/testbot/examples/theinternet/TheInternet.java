@@ -1,6 +1,5 @@
 package com.github.anthonime.testbot.examples.theinternet;
 
-import com.github.anthonime.testbot.definitions.actions.Actions;
 import com.github.anthonime.testbot.definitions.applications.ApplicationDefinition;
 import com.github.anthonime.testbot.definitions.applications.ApplicationDefinitionBuilder;
 import com.github.anthonime.testbot.definitions.data.ObjectDefinitionRepository;
@@ -10,7 +9,11 @@ import com.github.anthonime.testbot.definitions.elements.SelectorDefinition;
 import com.github.anthonime.testbot.definitions.states.StateDefinition;
 import com.github.anthonime.testbot.definitions.transitions.TransitionDefinition;
 
+import java.time.Duration;
+
 import static com.github.anthonime.testbot.definitions.Definitions.application;
+import static com.github.anthonime.testbot.definitions.actions.Actions.click;
+import static com.github.anthonime.testbot.definitions.actions.Actions.pause;
 import static com.github.anthonime.testbot.definitions.elements.builders.Elements.*;
 import static com.github.anthonime.testbot.definitions.states.builders.StateDefinitionBuilder.aState;
 import static com.github.anthonime.testbot.definitions.states.builders.States.elementInvisible;
@@ -73,12 +76,17 @@ public class TheInternet {
     public TransitionDefinition toDynamicControlsPage = aTransition("toDynamicControls")
             .from(homePage)
             .to(dynamicControlsPage)
-            .by(Actions.click(dynamicControlsMenuItem))
+            .by(click(dynamicControlsMenuItem))
             .build();
-//
-//    public TransitionDefinitionBuilder toDynamicControlsWithoutCheckboxBuilder = aTransition("toDynamicControlsWithoutCheckbox");
-//    public TransitionDefinition toDynamicControlsWithCheckbox = aTransition("toDynamicControlsWithCheckbox")
-//            .from("toDynamicControlsWithoutCheckbox")
+
+    public TransitionDefinition toDynamicControlsWithCheckbox = aTransition("toDynamicControlsWithCheckbox")
+            .from(dynamicControlsWithoutCheckbox)
+            .to(dynamicControlsWithCheckbox)
+            .by(click(dynamicControlsAddButton), pause(Duration.ofSeconds(3)))
+            .build();
+    public TransitionDefinition toDynamicControlsWithoutCheckbox = aTransition("toDynamicControlsWithoutCheckbox")
+            .from(dynamicControlsWithCheckbox).to(dynamicControlsWithoutCheckbox)
+            .by(click(dynamicControlsRemoveButton), pause(Duration.ofSeconds(3))).build();
 
 
     //APPLICATION DEFS

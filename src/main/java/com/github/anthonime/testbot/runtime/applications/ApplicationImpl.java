@@ -11,6 +11,7 @@ import com.github.anthonime.testbot.runtime.actions.ActionResult;
 import com.github.anthonime.testbot.runtime.elements.WebPageContext;
 import com.github.anthonime.testbot.runtime.states.State;
 import com.github.anthonime.testbot.runtime.states.StateImpl;
+import com.github.anthonime.testbot.runtime.transitions.TransitionResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class ApplicationImpl implements Application {
 
     @Override
     public boolean isOpen() {
-        return isStateActive(definition.getRootStateDefinition());
+        return applicationSupport.isStateActive(definition.getRootStateDefinition(), null);
     }
 
     @Override
@@ -48,7 +49,7 @@ public class ApplicationImpl implements Application {
     }
 
     protected boolean isOpen(EnvironmentDefinition environmentDefinition) {
-        return isStateActive(definition.getRootStateDefinition(environmentDefinition));
+        return applicationSupport.isStateActive(definition.getRootStateDefinition(environmentDefinition), null);
     }
 
     @Override
@@ -90,16 +91,12 @@ public class ApplicationImpl implements Application {
                 //and assert the state with each of them.
                 throw new IllegalStateException("not yet implemented");
             } else {
-                if (isStateActive(stateDefinition)) {
+                if (applicationSupport.isStateActive(stateDefinition, null)) {
                     activeStates.add(new StateImpl(stateDefinition, null));
                 }
             }
         }
         return activeStates;
-    }
-
-    private boolean isStateActive(StateDefinition stateDefinition) {
-        return applicationSupport.getStateActivator().isActive(stateDefinition, null);
     }
 
     @Override
@@ -113,7 +110,8 @@ public class ApplicationImpl implements Application {
     }
 
     @Override
-    public void operateTransition(TransitionDefinition transitionDefinition) {
-
+    public TransitionResult operateTransition(TransitionDefinition transition) {
+        return applicationSupport.operationTransition(transition);
     }
+
 }

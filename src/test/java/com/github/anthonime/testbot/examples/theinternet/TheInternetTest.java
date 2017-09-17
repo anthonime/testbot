@@ -1,16 +1,13 @@
 package com.github.anthonime.testbot.examples.theinternet;
 
-import com.github.anthonime.testbot.definitions.actions.ActionDefinitionList;
-import com.github.anthonime.testbot.definitions.actions.Actions;
 import com.github.anthonime.testbot.definitions.applications.ApplicationDefinition;
-import com.github.anthonime.testbot.runtime.actions.ActionResultType;
 import com.github.anthonime.testbot.runtime.applications.exceptions.UnknownEnvironmentException;
+import com.github.anthonime.testbot.runtime.transitions.TransitionResult;
 import com.github.anthonime.testbot.support.AbstractApplicationTest;
 import org.junit.Test;
 
-import java.time.Duration;
-
 import static com.github.anthonime.testbot.examples.theinternet.TheInternet.THE_INTERNET;
+import static com.github.anthonime.testbot.runtime.transitions.TransitionResultType.SUCCESS;
 import static org.assertj.core.api.Assertions.*;
 
 /**
@@ -49,21 +46,18 @@ public class TheInternetTest extends AbstractApplicationTest {
         assertThat(application.getActiveStates(null)).extracting(s -> s.getDefinition())
                 .containsOnly(THE_INTERNET.rootState, THE_INTERNET.homePage);
 
-        application.operateTransition(THE_INTERNET.toDynamicControlsPage);
+        assertThat(application.operateTransition(THE_INTERNET.toDynamicControlsPage).isSuccess()).isTrue();
 
         assertThat(application.getActiveStates(null)).extracting(s -> s.getDefinition())
                 .containsOnly(THE_INTERNET.rootState, THE_INTERNET.dynamicControlsPage, THE_INTERNET.dynamicControlsWithCheckbox);
 
         //perform a click on the remove button
-        assertThat(application.performActions(
-                new ActionDefinitionList(
-                        Actions.click(THE_INTERNET.dynamicControlsRemoveButton),
-                        Actions.pause(Duration.ofSeconds(3))
-                )
-        ).getResults()).extracting(r -> r.getType()).containsExactly(ActionResultType.SUCCESS, ActionResultType.SUCCESS);
+        assertThat(application.operateTransition(THE_INTERNET.toDynamicControlsWithoutCheckbox))
+                .returns(SUCCESS, TransitionResult::getResultType);
+        assertThat(application.operateTransition(THE_INTERNET.toDynamicControlsWithCheckbox).isSuccess()).isTrue();
 
         assertThat(application.getActiveStates(null)).extracting(s -> s.getDefinition())
-                .containsOnly(THE_INTERNET.rootState, THE_INTERNET.dynamicControlsPage, THE_INTERNET.dynamicControlsWithoutCheckbox);
+                .containsOnly(THE_INTERNET.rootState, THE_INTERNET.dynamicControlsPage, THE_INTERNET.dynamicControlsWithCheckbox);
 
     }
 

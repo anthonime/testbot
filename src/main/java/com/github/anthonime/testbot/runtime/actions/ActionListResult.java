@@ -24,4 +24,8 @@ public class ActionListResult {
     public List<ActionResult> getResults() {
         return results;
     }
+
+    public boolean isSuccess() {
+        return getResults().stream().allMatch(r -> r.getType() == ActionResultType.SUCCESS);
+    }
 }

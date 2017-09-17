@@ -1,9 +1,14 @@
 package com.github.anthonime.testbot.runtime.applications;
 
 import com.github.anthonime.testbot.definitions.applications.ApplicationDefinition;
+import com.github.anthonime.testbot.definitions.data.ObjectInstance;
+import com.github.anthonime.testbot.definitions.states.StateDefinition;
+import com.github.anthonime.testbot.definitions.states.StateIdentifier;
 import com.github.anthonime.testbot.definitions.states.StateRepository;
+import com.github.anthonime.testbot.definitions.transitions.TransitionDefinition;
 import com.github.anthonime.testbot.runtime.actions.ActionExecutor;
 import com.github.anthonime.testbot.runtime.actions.ActionExecutorImpl;
+import com.github.anthonime.testbot.runtime.actions.ActionListResult;
 import com.github.anthonime.testbot.runtime.databinding.DataMapperFactory;
 import com.github.anthonime.testbot.runtime.databinding.DataMapperProvider;
 import com.github.anthonime.testbot.runtime.databinding.DataMapperProviderImpl;
@@ -18,6 +23,11 @@ import com.github.anthonime.testbot.runtime.states.ElementStateActivatorProvider
 import com.github.anthonime.testbot.runtime.states.ElementValueExtractorProvider;
 import com.github.anthonime.testbot.runtime.states.StateActivator;
 import com.github.anthonime.testbot.runtime.states.StateActivatorImpl;
+import com.github.anthonime.testbot.runtime.transitions.TransitionResult;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Created by schio on 9/17/2017.
@@ -60,11 +70,42 @@ public class ApplicationSupport {
         this.actionExecutor = new ActionExecutorImpl(context, elementRepository);
     }
 
-    public StateActivator getStateActivator() {
-        return stateActivator;
-    }
-
     public ActionExecutor getActionExecutor() {
         return actionExecutor;
+    }
+
+    public StateDefinition getStateDefinition(StateIdentifier identifier) {
+        return Objects.requireNonNull(stateRepository.getStateDefinition(identifier), "The state " + identifier + " does not exists!");
+    }
+
+    public TransitionResult operationTransition(TransitionDefinition transition) {
+        List<StateIdentifier> inactiveStates = verifySourceStatesAreActive(transition);
+        if (inactiveStates.size() > 0) {
+            return TransitionResult.notStarted(inactiveStates);
+        }
+        ActionListResult actionListResult = getActionExecutor().execute(transition.getActions());
+        if (!actionListResult.isSuccess()) {
+            return TransitionResult.aborted(actionListResult);
+        }
+
+        if (!isTransitionEffective(transition)) {
+            return TransitionResult.notEffective(actionListResult);
+        }
+        return TransitionResult.success(actionListResult);
+    }
+
+    private boolean isTransitionEffective(TransitionDefinition transition) {
+        return isStateActive(getStateDefinition(transition.getTargetState()), null);
+    }
+
+    public boolean isStateActive(StateDefinition state, ObjectInstance instance) {
+        return stateActivator.isActive(state, null);
+    }
+
+    private List<StateIdentifier> verifySourceStatesAreActive(TransitionDefinition transitionDefinition) {
+        List<StateIdentifier> sourceStates = transitionDefinition.getSourceStates();
+        List<StateIdentifier> inactiveStates = sourceStates.stream().filter(s -> !isStateActive(getStateDefinition(s), null))
+                .collect(Collectors.toList());
+        return inactiveStates;
     }
 }

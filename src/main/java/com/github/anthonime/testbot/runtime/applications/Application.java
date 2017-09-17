@@ -7,6 +7,7 @@ import com.github.anthonime.testbot.definitions.transitions.TransitionDefinition
 import com.github.anthonime.testbot.runtime.actions.ActionListResult;
 import com.github.anthonime.testbot.runtime.actions.ActionResult;
 import com.github.anthonime.testbot.runtime.states.State;
+import com.github.anthonime.testbot.runtime.transitions.TransitionResult;
 
 import java.util.List;
 
@@ -84,5 +85,5 @@ public interface Application {
      *
      * @param transitionDefinition
      */
-    void operateTransition(TransitionDefinition transitionDefinition);
+    TransitionResult operateTransition(TransitionDefinition transitionDefinition);
 }
